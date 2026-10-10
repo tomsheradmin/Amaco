@@ -1,0 +1,31 @@
+{
+  "public/assets/fonts/JuanCock.woff": {
+    "file": "assets/JuanCock-b0c8ac38.woff",
+    "src": "public/assets/fonts/JuanCock.woff"
+  },
+  "public/assets/images/arrow-left.svg": {
+    "file": "assets/arrow-left-a90c5008.svg",
+    "src": "public/assets/images/arrow-left.svg"
+  },
+  "public/assets/images/arrow-right.svg": {
+    "file": "assets/arrow-right-c66c02c7.svg",
+    "src": "public/assets/images/arrow-right.svg"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-e763fe6b.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-64efd51c.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "css": [
+      "assets/app-64efd51c.css"
+    ],
+    "file": "assets/app-24a202f6.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  }
+}

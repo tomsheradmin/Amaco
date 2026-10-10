@@ -1,0 +1,290 @@
+
+    @php
+        $logo = get_setting('header_logo');
+    @endphp
+    <header id="main-header" class="w-full fixed bg-transparent z-[9999] px-[16px] md:px-[30px] lg:px-[50px] xl:px-[100px] 2xl:px-[140px] transition-all duration-[600ms] bg-gradient-to-b from-black/90 via-black/30 to-transparent">
+        <div class="top-bar w-full flex items-center justify-center sm:justify-content-center hidden xl:block">
+            <div class="w-full m-auto flex items-center justify-center md:justify-between border-b border-[#393939] pt-[20px] pb-[20px]">
+                <div class="contact-info">
+                    <div class="text-[#ffffff] no-underline flex items-center gap-[10px]">
+                        <img src="{{ asset('assets/images/location-marker.svg') }}" alt="address" title="address" /> <span class="hidden md:block">{{ get_setting('header_address') }}</span>
+                    </div>
+                </div>
+                <div class="top-links flex items-center gap-[0px] md:gap-[50px] xl:gap-[100px] justify-between sm:justify-center">
+                    <a href="mailto:{{ get_setting('header_email') }}" class="text-[#ffffff] no-underline flex items-center gap-[10px]">
+                        <img src="{{ asset('assets/images/email.svg') }}" alt="Email icon for PC Garage contact information" title="email" />
+                        <span class="hidden md:block">{{ get_setting('header_email') }}</span>
+                    </a>
+                    <a href="tel:{{ get_setting('header_phone') }}" class="text-[#ffffff] no-underline flex items-center gap-[10px]">
+                        <img src="{{ asset('assets/images/phone.svg') }}" alt="Phone icon for PC Garage contact information" title="phone" />
+                        <span class="hidden md:block">{{ get_setting('header_phone') }}</span>
+                    </a>
+                </div>
+                <div class="profile-info block md:hidden">
+                    <a href="{{ route('account') }}" class="text-[#ffffff] no-underline flex items-center gap-[10px]">
+                        <img src="{{ asset('assets/images/account.svg') }}" alt="User Icon" class="img-fluid" title="User">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <nav class="main-nav w-full py-[20px]">
+            <div class="m-auto nav-wrapper grid grid-cols-2 xl:grid-cols-[auto_auto_auto] items-center justify-between w-full">
+                <div class="logo">
+                    <a href="{{ route('home') }}" title="Logo">
+                        <img src="{{ uploaded_asset($logo) }}" alt="PC Garage Logo" title="PC Garage Logo" class="w-[200px] white ">
+                    </a>
+                </div>
+
+                @php
+                    $menus = getMenus();
+                @endphp
+
+                <ul class="nav-menu items-center gap-[30px] list-none hidden xl:flex items-center">
+                    @foreach($menus as $menu)
+                        @if($menu->type === 'normal')
+                            <li>
+                                <a href="{{ getMenuLink($menu) }}"
+                                class="text-[#ffffff] uppercase text-[14px] no-underline">
+                                    {{ $menu->title }}
+                                </a>
+                            </li>
+                        @endif
+
+                        @if($menu->type === 'mega')
+                            <li class="relative has-mega">
+                                <a href="{{ getMenuLink($menu) }}"
+                                class="text-[#ffffff] uppercase text-[14px] no-underline flex gap-[10px]">
+                                    {{ $menu->title }}
+                                    <img src="{{ asset('assets/images/caret-down.svg') }}" class="img-fluid" alt="Caret Down Icon">
+                                </a>
+
+                                <div class="mega-menu absolute top-full m-auto left-0 right-0 w-5xl bg-[#ffffff20] backdrop-blur-[100px] p-10 shadow-[0_10px_30px_rgba(0,0,0,0.1)] opacity-0 invisible translate-y-[0px] transition-all ease-in-out group-hover:opacity-100 group-hover:visible group-hover:translate-y-[55px]">
+
+                                    <div class="mega-grid w-full mx-auto grid gap-[50px] grid-cols-{{ count($menu->sections) }} gap-[50px]">
+
+                                        @foreach($menu->sections as $section)
+                                            <div>
+
+                                                <h4 class="text-sm text-white uppercase pb-[10px] mb-[15px] border-b border-[#89898950]">
+                                                    <a href="{{ getMenuLink($section) }}" class="">
+                                                        {{ $section->title }}
+                                                    </a>
+                                                </h4>
+
+                                                <ul class="grid grid-cols-2 md:grid-cols-2 gap-x-8">
+                                                    @foreach($section->items as $item)
+                                                        <li>
+                                                            <a href="{{ getMenuLink($item) }}"
+                                                            class="transition-all duration-[600ms] text-[#898989] hover:text-[#2A7CFF] hover:pl-[10px] py-[5px] w-full inline-block">
+                                                                {{ $item->title }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+
+                <div class="nav-actions flex items-center gap-[30px] md:gap-[30px] justify-end">
+                    <!--burger menu trigger-->
+                    <button onclick="toggleMobileMenu()" class="burger-menu gap-[6px] flex xl:hidden flex-col bg-transparent border-hidden cursor-pointer">
+                        <span class="w-[20px] h-[1.5px] flex bg-[#ffffff]"></span>
+                        <span class="w-[20px] h-[1.5px] flex bg-[#ffffff]"></span>
+                        <span class="w-[20px] h-[1.5px] flex bg-[#ffffff]"></span>
+                    </button>
+                    <!--//burger menu trigger-->
+
+                    <!--search trigger-->
+                    <button onclick="toggleSearch()" class="action-btn search-trigger bg-transparent border-hidden cursor-pointer">
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.9999 14.1167L11.0861 10.2029C12.1028 8.95957 12.6026 7.373 12.4823 5.77142C12.3619 4.16984 11.6306 2.67578 10.4396 1.59827C9.24859 0.520763 7.68898 -0.0577488 6.08339 -0.0176039C4.4778 0.022541 2.94905 0.678271 1.81337 1.81395C0.677691 2.94963 0.0219612 4.47838 -0.0181837 6.08397C-0.0583286 7.68956 0.520183 9.24917 1.59769 10.4402C2.6752 11.6312 4.16926 12.3625 5.77084 12.4828C7.37242 12.6032 8.95899 12.1033 10.2024 11.0867L14.1161 15.0004L14.9999 14.1167ZM6.24986 11.2504C5.26096 11.2504 4.29426 10.9572 3.47201 10.4078C2.64977 9.85838 2.0089 9.07749 1.63047 8.16386C1.25203 7.25023 1.15301 6.2449 1.34594 5.27499C1.53886 4.30509 2.01507 3.41417 2.71433 2.71491C3.41359 2.01565 4.30451 1.53944 5.27441 1.34652C6.24432 1.15359 7.24965 1.25261 8.16328 1.63105C9.07691 2.00948 9.8578 2.65035 10.4072 3.47259C10.9566 4.29484 11.2499 5.26154 11.2499 6.25044C11.2484 7.57607 10.7211 8.84697 9.78375 9.78433C8.84639 10.7217 7.57549 11.249 6.24986 11.2504Z" fill="white"/>
+                        </svg>
+                    </button>
+                    <!--//search trigger-->
+
+
+
+
+                    <!--profile trigger-->
+                    <div class="hidden md:block">
+                        @if(Auth('frontend')->check())
+                            <button onclick="toggleSidePanel()" class="flex items-center gap-2 text-white hover:text-[#2A7CFF] text-sm font-medium transition-colors">
+                                <span class="p-1.5 border border-white/20 rounded-full">
+                                    <svg width="18" height="18" viewBox="0 0 12 15" fill="white">
+                                        <path d="M8.15234 8.74992C8.97353 8.75104 9.76112 9.07746 10.3418 9.65813C10.9225 10.2388 11.2489 11.0264 11.25 11.8476V14.9999H10V11.8476C9.99938 11.3578 9.80437 10.8883 9.45801 10.5419C9.11164 10.1956 8.64217 10.0005 8.15234 9.99992H3.09863C2.60865 10.0004 2.13847 10.1954 1.79199 10.5419C1.44568 10.8883 1.25062 11.3578 1.25 11.8476V14.9999H0V11.8476C0.00111301 11.0264 0.328507 10.2388 0.90918 9.65813C1.48992 9.0776 2.27748 8.75092 3.09863 8.74992H8.15234ZM4.89355 0.0721893C5.62096 -0.0725011 6.37534 0.0012594 7.06055 0.28508C7.74554 0.568873 8.33118 1.04948 8.74316 1.66594C9.15521 2.28261 9.375 3.00826 9.375 3.74992C9.37396 4.74408 8.97837 5.69733 8.27539 6.40031C7.57238 7.10323 6.61915 7.49893 5.625 7.49992C4.88352 7.4999 4.15855 7.27996 3.54199 6.86809C2.92533 6.45604 2.44495 5.8697 2.16113 5.18449C1.87737 4.49941 1.80266 3.74577 1.94727 3.01848C2.09194 2.29115 2.44929 1.62296 2.97363 1.09856C3.49805 0.574143 4.16618 0.21689 4.89355 0.0721893ZM5.625 1.24992C5.13068 1.24995 4.64736 1.39623 4.23633 1.67082C3.82525 1.9455 3.50465 2.33613 3.31543 2.79289C3.12625 3.24961 3.07647 3.75238 3.17285 4.23723C3.26931 4.72217 3.5078 5.16788 3.85742 5.5175C4.20704 5.86711 4.65277 6.10561 5.1377 6.20207C5.62253 6.29844 6.12534 6.24866 6.58203 6.05949C7.03878 5.87027 7.42943 5.54967 7.7041 5.1386C7.97869 4.72758 8.12496 4.24423 8.125 3.74992C8.125 3.08691 7.86139 2.45117 7.39258 1.98235C6.92375 1.51352 6.28802 1.24992 5.625 1.24992Z" />
+                                    </svg>
+                                </span>
+
+                                <span class="max-w-[50px] truncate inline-block text-white">
+                                    {{ auth('frontend')->user()->name ?? '' }}
+                                </span>
+                            </button>
+                        @else
+                            <a href="{{ route('login') }}" class="flex items-center gap-2 text-white hover:text-[#2A7CFF] text-sm font-medium transition-colors">
+                                <span class="p-1.5 border border-white/20 rounded-full">
+                                    <svg width="14" height="14" viewBox="0 0 12 15" fill="currentColor"><path d="M8.15234 8.74992C8.97353 8.75104 9.76112 9.07746 10.3418 9.65813C10.9225 10.2388 11.2489 11.0264 11.25 11.8476V14.9999H10V11.8476C9.99938 11.3578 9.80437 10.8883 9.45801 10.5419C9.11164 10.1956 8.64217 10.0005 8.15234 9.99992H3.09863C2.60865 10.0004 2.13847 10.1954 1.79199 10.5419C1.44568 10.8883 1.25062 11.3578 1.25 11.8476V14.9999H0V11.8476C0.00111301 11.0264 0.328507 10.2388 0.90918 9.65813C1.48992 9.0776 2.27748 8.75092 3.09863 8.74992H8.15234ZM4.89355 0.0721893C5.62096 -0.0725011 6.37534 0.0012594 7.06055 0.28508C7.74554 0.568873 8.33118 1.04948 8.74316 1.66594C9.15521 2.28261 9.375 3.00826 9.375 3.74992C9.37396 4.74408 8.97837 5.69733 8.27539 6.40031C7.57238 7.10323 6.61915 7.49893 5.625 7.49992C4.88352 7.4999 4.15855 7.27996 3.54199 6.86809C2.92533 6.45604 2.44495 5.8697 2.16113 5.18449C1.87737 4.49941 1.80266 3.74577 1.94727 3.01848C2.09194 2.29115 2.44929 1.62296 2.97363 1.09856C3.49805 0.574143 4.16618 0.21689 4.89355 0.0721893ZM5.625 1.24992C5.13068 1.24995 4.64736 1.39623 4.23633 1.67082C3.82525 1.9455 3.50465 2.33613 3.31543 2.79289C3.12625 3.24961 3.07647 3.75238 3.17285 4.23723C3.26931 4.72217 3.5078 5.16788 3.85742 5.5175C4.20704 5.86711 4.65277 6.10561 5.1377 6.20207C5.62253 6.29844 6.12534 6.24866 6.58203 6.05949C7.03878 5.87027 7.42943 5.54967 7.7041 5.1386C7.97869 4.72758 8.12496 4.24423 8.125 3.74992C8.125 3.08691 7.86139 2.45117 7.39258 1.98235C6.92375 1.51352 6.28802 1.24992 5.625 1.24992Z" /></svg>
+                                </span>
+                                Login
+                            </a>
+                        @endif
+                    </div>
+                    <!--profile trigger-->
+                </div>
+            </div>
+        </nav>
+    </header>
+
+     <!--my account side panel-->
+    <div id="side-panel-overlay" onclick="toggleSidePanel()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="account-side-panel" class="fixed top-0 right-0 h-full w-full max-w-[380px] bg-[#0B0F13] border-l border-white/5 z-[99999] translate-x-full transition-transform duration-300 ease-in-out shadow-[-20px_0_50px_rgba(0,0,0,0.5)]">
+        <div class="flex flex-col h-full">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between bg-[#1C2228]/50">
+                <div class="flex items-center gap-4">
+                    <div id="userAvatar" class="flex items-center justify-center w-12 h-12 rounded-full bg-[#282B34] border border-white/5 text-white font-bold text-xl">?</div>
+                    <div class="flex flex-col gap-[2px] line-clamp-2">
+                        <span id="userName" class="font-medium text-[18px] text-white">{{ auth('frontend')->user()->name ?? '' }}</span>
+                        <p class="text-gray-500 text-[11px] tracking-wider">{{ auth('frontend')->user()->email ?? '' }}</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidePanel()" class="p-2 hover:bg-white/5 rounded-full text-gray-400 hover:text-white transition-all">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="flex-grow overflow-y-auto p-6 space-y-8">
+                <nav class="flex flex-col gap-[5px] xl:space-y-0">
+                            <a href="{{ route('account') }}" class="w-full text-gray-400 flex flex-row items-start gap-4 p-3 rounded-[10px] hover:bg-[#252C33] text-[#898989] hover:text-white transition-all group">
+                                <svg class="w-5 h-5 text-[#ffffff]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                <span class="text-[15px]">Profile</span>
+                            </a>
+
+                            <a href="{{ route('my-address') }}" class="w-full text-gray-400 flex flex-row items-start gap-4 p-3 rounded-[10px] hover:bg-[#252C33] text-[#898989] hover:text-white transition-all group">
+                                <svg class="w-5 h-5 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                <span class="text-[15px]">Address</span>
+                            </a>
+
+                            <a href="{{ route('update-password') }}" class="w-full text-gray-400 flex flex-row items-start gap-4 p-3 rounded-[10px] hover:bg-[#252C33] text-[#898989] hover:text-white transition-all group">
+                                <svg class="w-5 h-5 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24"><path fill="#9F9FA9" class="group-hover:fill-white" d="M19,8.424V7A7,7,0,0,0,5,7V8.424A5,5,0,0,0,2,13v6a5.006,5.006,0,0,0,5,5H17a5.006,5.006,0,0,0,5-5V13A5,5,0,0,0,19,8.424ZM7,7A5,5,0,0,1,17,7V8H7ZM20,19a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3V13a3,3,0,0,1,3-3H17a3,3,0,0,1,3,3Z"/><path fill="#9F9FA9" class="group-hover:fill-white" d="M12,14a1,1,0,0,0-1,1v2a1,1,0,0,0,2,0V15A1,1,0,0,0,12,14Z"/></svg>
+                                <span class="text-[15px]">Password</span>
+                            </a>
+
+                            <a href="{{ route('customer.notifications') }}" class="w-full text-gray-400 flex flex-row items-start gap-4 p-3 rounded-[10px] hover:bg-[#252C33] text-[#898989] hover:text-white transition-all group">
+                                <svg class="w-5 h-5 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#9F9FA9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path class="group-hover:stroke-white" d="M18 8a6 6 0 0 0-12 0v5a4 4 0 0 1-1 2.664V17h14v-1.336A4 4 0 0 1 18 13V8z"/>
+                                <path class="group-hover:stroke-white" d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                </svg>
+                                <span class="text-[15px]">Notifications</span>
+                            </a>
+                        </nav>
+            </div>
+            <div class="p-6 border-t border-white/5 bg-[#0B0F13]">
+                <a href="{{ route('logout') }}" class="flex items-center justify-center gap-3 w-full py-4 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl font-bold uppercase text-[11px] tracking-widest transition-all duration-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--//my account side panel-->
+
+    <!--search panel-->
+    <div id="search-overlay" onclick="toggleSearch()" class="fixed inset-0 bg-black/40 backdrop-blur-md z-[90] opacity-0 pointer-events-none transition-all duration-500"></div>
+    <div id="search-mega-menu" class="absolute top-0 left-0 pt-[150px] w-full bg-[#0B0F13] border-b border-white/5 z-[100] -translate-y-full transition-transform duration-500 ease-in-out invisible">
+        <div class="container mx-auto px-6 py-12">
+            <div class="max-w-4xl mx-auto mb-12">
+                <div class="relative group">
+                    <input type="text" id="mega-search-input" placeholder="What are you looking for?" class="w-full bg-transparent border-0 border-b-2 border-white/10 outline-none focus:outline-none focus:ring-0 active:outline-none  py-6 text-2xl md:text-4xl text-white placeholder-gray-700 focus:outline-none focus:border-[#2A7CFF] transition-all" value="{{ request('search', '') }}">
+                    <div class="absolute right-0 bottom-6 text-[#2A7CFF] opacity-0 group-focus-within:opacity-100 transition-opacity">
+                        <span class="hidden md:block text-[12px] font-medium uppercase tracking-widest">Press Enter to Search</span>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col">
+                    <div id="mega-search-results" class="mt-4 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--//search panel-->
+
+    <!--mobile burger menu-->
+    <div id="mobile-menu-overlay" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+    <div id="mobile-side-panel" class="fixed top-0 left-0 h-full w-[300px] bg-[#0B0F13] z-[99999] -translate-x-full transition-transform duration-300 ease-in-out border-r border-white/5">
+        <div class="flex flex-col h-full">
+            <div class="p-6 border-b border-white/5 flex items-center justify-between">
+                <div class="logo">
+                    <a href="{{  route('home') }}" title="Home - PC Garage | Custom Gaming PCs & High-End Hardware in UAE">
+                        <img src="{{ uploaded_asset($logo) }}" alt="PC Garage Logo" title="PC Garage Logo" class="w-[200px] white ">
+                    </a>
+                </div>
+                <button onclick="toggleMobileMenu()" class="text-gray-400">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <nav class="flex-grow overflow-y-auto p-4 custom-scrollbar">
+
+                <ul class="space-y-2">
+
+                    @foreach($menus as $menu)
+                        @if($menu->type === 'normal')
+                            <li>
+                                <a href="{{ getMenuLink($menu) }}"
+                                class="block p-3 text-white uppercase text-sm font-medium hover:bg-white/5 rounded-lg">
+                                    {{ $menu->title }}
+                                </a>
+                            </li>
+                        @endif
+
+                        @if($menu->type === 'mega')
+                            <li class="group">
+
+                                <button onclick="toggleSubMenu('menu-{{ $menu->id }}')"
+                                    class="w-full flex items-center justify-between p-3 text-white uppercase text-sm font-medium hover:bg-white/5 rounded-lg transition-all">
+                                    <a href="{{ getMenuLink($menu) }}">
+                                        {{ $menu->title }}
+                                    </a>
+
+                                    <svg id="caret-{{ $menu->id }}" class="w-4 h-4 transition-transform duration-300"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+
+                                <div id="menu-{{ $menu->id }}" class="hidden overflow-hidden pl-4 mt-2 space-y-4">
+
+                                    @foreach($menu->sections as $section)
+                                        <div>
+                                            <p class="text-[10px] text-gray-400 uppercase mb-3">
+                                                <a href="{{ getMenuLink($section) }}" class="">
+                                                    {{ $section->title }}
+                                                </a>
+                                            </p>
+
+                                            <ul class="grid grid-cols-1 gap-1">
+                                                @foreach($section->items as $item)
+                                                    <li>
+                                                        <a href="{{ getMenuLink($item) }}"
+                                                        class="transition-all duration-[600ms] text-white hover:text-[#2A7CFF] hover:pl-[10px] py-[5px] w-full inline-block">
+                                                            {{ $item->title }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endforeach
+
+                                </div>
+                            </li>
+                        @endif
+
+                    @endforeach
+
+                </ul>
+            </nav>
+        </div>
+    </div>
